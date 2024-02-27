@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1RM</title>
+    <style>
+        input[type="number"]{
+            width: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calcule seu 1 RM</h1>
+    <label for="nivel">Qual nível você se qualifica?</label>
+    <select name="nivel" id="nivel">
+        <option value="iniciante">Iniciante</option>
+        <option value="experiente">Experiente</option>
+    </select>
+    <form action="get">
+        <p>Escreva o nome do exercicio:<input type="text" name="exercicio" id="exercicio"></p>
+        <label for="rm">Quantas repetições máximas você realizou? (De 1 a 10) </label><input type="number" name="rm" id="repetiçaomax" min="1" max="10">
+        <p>Qual a carga você utilizou?<input type="number" name="carga" id="cargakg">Kg.</p>
+        <label for="objetivo">Selecione um Objetivo:</label>
+        <select name="objetivo" id="objetivo">
+            <option value="adaptacao">Adaptação</option>
+            <option value="resistencia">Resistência Muscular</option>
+            <option value="hipertrofia">Hipertrofia Muscular</option>
+            <option value="forca">Aumento de Força Máxima</option>
+        </select>
+        <p><input type="button" value="Calcule 1RM" onclick="calcular()"></p>
+    </form>
+    <div id="resultado"></div>
+    <div><input type="button" value="Limpar" onclick="limpar()"></div>
+    <script>
+        function calcular(){
+            let nivel = document.getElementById('nivel').value;
+            let formula = ''
+            let rm = Number(document.getElementById('repetiçaomax').value);
+            let carga = Number(document.getElementById('cargakg').value);
+            let exercicio = document.getElementById('exercicio').value;
+            let resultado = document.getElementById('resultado');
+            
+            
+            let cargaMininma = '';
+            let cargaMax = '';
+            if(rm < 1 || rm > 10 || carga <= 1 || exercicio == ''){
+                window.alert('[ERRO] Preencha os dados corretamente!!!');
+               
+            }else{
+                if(nivel === 'iniciante'){
+                formula = Math.round(0.033 * rm * carga + carga);
+                } else if(nivel === 'experiente'){
+                formula =  Math.round(carga * (1 + 0.025 * rm)) 
+                };
+
+            
+                resultado.innerHTML += `<p>Se você é ${nivel} na musculação, sua carga para 1 repetição máxima (1RM) é de aproximadamente ${formula} Kg para o <strong>${exercicio}</strong>.</p>`;
+                switch (document.getElementById('objetivo').value) {
+            case "adaptacao":
+                cargaMinima = Math.round(formula*45/100);
+                cargaMax = Math.round(formula*55/100);
+                resultado.innerHTML += `Para treino de adaptação sua carga deve ficar entre ${cargaMinima}KG e ${cargaMax}KG.<p>----------------------------------------------------------------------------</p>`;
+                break;
+            case "resistencia":
+                cargaMinima = Math.round(formula*60/100);
+                cargaMax = Math.round(formula*70/100);
+                resultado.innerHTML += `Para treino com ênfase em resistência sua carga deve ficar entre ${cargaMinima}KG e ${cargaMax}KG.<p>----------------------------------------------------------------------------</p>`;
+                break;
+            case "hipertrofia":
+                cargaMinima = Math.round(formula*65/100);
+                cargaMax = Math.round(formula*85/100);
+                resultado.innerHTML += `Para treino de Hipertrofia e ênfase em aumento de massa muscular sua carga deve ficar entre ${cargaMinima}KG e ${cargaMax}KG.<p>----------------------------------------------------------------------------</p>`;
+                break;
+            case "forca":
+                cargaMinima = Math.round(formula*85/100);
+                cargaMax = formula; 
+                resultado.innerHTML += `Para treino com objetivo de aumento da capacidade de força máxima sua carga deve ficar entre ${cargaMinima}KG e ${cargaMax}KG.<p>----------------------------------------------------------------------------</p>`;
+                break;
+            };
+
+                
+            };
+            
+       };
+       function limpar(){
+        resultado.innerHTML = '';
+
+       };
+
+       
+
+
+
+       
+    </script>
+
+</body>
+</html>
